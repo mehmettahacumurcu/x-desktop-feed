@@ -1,0 +1,53 @@
+.superpowers/
+.worktrees/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+*.spec
+*.db
+*.sqlite*
+models/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+
+# Runtime data, sessions and generated datasets
+/data/
+/media/
+/exports/
+/web-profile/
+/opera-bridge/
+/reader-storage/
+/reader-cache/
+*.db-*
+*.sqlite*-*
+*.log
+ui.ini
+
+# Python packaging, analysis and editor artifacts
+*.egg-info/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+test-results/
+node_modules/
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+
+# Local reports and working documents are not part of the published project
+/docs/
+/raporlar/

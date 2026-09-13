@@ -1,0 +1,10 @@
+:root { color-scheme: dark; font: 14px/1.4 system-ui, sans-serif; }
+body { margin: 0; min-width: 280px; background: #17171d; color: #f5f5f7; }
+main { display: grid; gap: 10px; padding: 16px; }
+h1 { font-size: 18px; margin: 0 0 4px; }
+label { color: #c9c9d2; }
+input, button { box-sizing: border-box; width: 100%; border-radius: 7px; padding: 9px 10px; font: inherit; }
+input { border: 1px solid #555563; background: #24242c; color: inherit; }
+button { border: 0; background: #7c5cff; color: white; cursor: pointer; }
+button:hover { background: #9178ff; }
+#status { min-height: 2.8em; margin: 2px 0 0; color: #d8d8df; overflow-wrap: anywhere; }

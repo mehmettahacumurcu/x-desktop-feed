@@ -1,0 +1,9 @@
+{
+  "url": "https://x.com/example/status/123",
+  "author_name": "Example",
+  "author_url": "https://x.com/example",
+  "html": "<blockquote class=\"twitter-tweet\"><p>Example text <a href=\"https://pic.x.com/media\">pic.x.com/media</a></p>&mdash; Example (@example) <a href=\"https://x.com/example/status/123\">May 5, 2014</a></blockquote>",
+  "provider_name": "Twitter",
+  "provider_url": "https://x.com",
+  "version": "1.0"
+}

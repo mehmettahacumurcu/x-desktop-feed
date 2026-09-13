@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>X Desktop Feed Companion</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <h1 data-i18n="appName">X Desktop Feed</h1>
+    <label data-i18n="codeLabel" for="pairing-code">Pairing code</label>
+    <input id="pairing-code" type="text" autocomplete="off" maxlength="64">
+    <button id="pair" type="button" data-i18n="pair">Pair</button>
+    <button id="check" type="button" data-i18n="check">Check connection</button>
+    <button id="open-x" type="button" data-i18n="openX">Open X</button>
+    <p id="status" role="status" data-i18n="status">Checking connection…</p>
+    <label data-i18n="language" for="lang">Language</label>
+    <select id="lang">
+      <option value="en">English</option>
+      <option value="tr">Türkçe</option>
+    </select>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

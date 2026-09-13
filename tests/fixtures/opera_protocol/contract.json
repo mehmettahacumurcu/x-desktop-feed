@@ -1,0 +1,35 @@
+{
+  "heartbeat": {
+    "protocol_version": 4,
+    "x_state": "signed_in"
+  },
+  "progress": {
+    "protocol_version": 4,
+    "observations": [
+      {
+        "url": "https://x.com/openai/status/123",
+        "post_id": "123",
+        "author_handle": "openai",
+        "is_pinned": false,
+        "is_reply": false,
+        "is_repost": false,
+        "is_quote": false,
+        "is_promoted": false,
+        "parent_url": null,
+        "discovery_order": 0,
+        "photos": [
+          {
+            "position": 0,
+            "url": "https://pbs.twimg.com/media/abc?format=jpg&name=large",
+            "alt_text": "A test photo"
+          }
+        ]
+      }
+    ]
+  },
+  "completion": {
+    "protocol_version": 4,
+    "reason": "limit",
+    "diagnostic": null
+  }
+}
