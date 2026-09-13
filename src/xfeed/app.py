@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 import logging
+import shutil
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from collections.abc import Callable
 from typing import cast
 
@@ -94,8 +96,9 @@ def default_session_data_path() -> Path:
 def prepare_data_directory(data_dir: Path) -> None:
     """Upgrade the default location before opening files, under the instance guard.
 
-    Move the entire directory on the same filesystem so SQLite sidecars, relative
-    media paths and pairing state stay together. Never merge two data libraries.
+    Copy to a staging directory before publishing so SQLite sidecars, relative
+    media paths and pairing state stay together, including redirected Windows
+    AppData files. Keep the original as a backup; never merge two libraries.
     Explicit/custom database locations must not migrate the user's default data.
     """
     current = user_data_path("XDesktopFeed", appauthor=False)
@@ -104,7 +107,10 @@ def prepare_data_directory(data_dir: Path) -> None:
     legacy = user_data_path("XDesktopFeed", "Internship")
     if not current.exists() and legacy != current and legacy.exists():
         current.parent.mkdir(parents=True, exist_ok=True)
-        legacy.rename(current)
+        with TemporaryDirectory(prefix=".xfeed-migration-", dir=current.parent) as temporary:
+            staging = Path(temporary) / "data"
+            shutil.copytree(legacy, staging)
+            staging.rename(current)
     else:
         current.mkdir(parents=True, exist_ok=True)
 

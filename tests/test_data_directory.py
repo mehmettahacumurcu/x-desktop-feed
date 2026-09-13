@@ -61,7 +61,9 @@ def test_upgrade_preserves_database_media_settings_and_pairing(data_paths):
         path.write_bytes(content)
     original = {p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()}
     prepare(current)
-    assert not legacy.exists()
+    assert {
+        p.relative_to(legacy): p.read_bytes() for p in legacy.rglob("*") if p.is_file()
+    } == original
     assert {
         p.relative_to(current): p.read_bytes() for p in current.rglob("*") if p.is_file()
     } == original
@@ -95,6 +97,28 @@ def test_failed_rename_preserves_old_data_and_does_not_create_empty_library(
         prepare(current)
     assert not current.exists()
     assert (legacy / "feed.sqlite3").read_bytes() == b"existing database"
+
+
+def test_failed_copy_leaves_source_intact_without_publishing_partial_library(
+    data_paths, monkeypatch
+):
+    import shutil
+
+    current, legacy = data_paths
+    legacy.mkdir(parents=True)
+    (legacy / "ui.ini").write_text("keep")
+
+    def fail_copy(source, destination):
+        destination.mkdir()
+        (destination / "partial").write_text("incomplete")
+        raise OSError("disk full")
+
+    monkeypatch.setattr(shutil, "copytree", fail_copy)
+    with pytest.raises(OSError, match="disk full"):
+        prepare(current)
+    assert not current.exists()
+    assert (legacy / "ui.ini").read_text() == "keep"
+    assert not list(current.parent.glob(".xfeed-migration-*"))
 
 
 def test_custom_database_location_does_not_move_user_data(data_paths, tmp_path):

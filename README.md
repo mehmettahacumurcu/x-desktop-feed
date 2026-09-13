@@ -105,10 +105,11 @@ stores display-sized copies: every photo is retained, with its longest edge capp
 Photos are stored in the application's local data directory, under
 `media/<post-id>/photo-<position>.<ext>`.
 On Windows, the data directory is `%LOCALAPPDATA%\XDesktopFeed`. On the first launch
-after upgrading, the app moves an existing legacy data directory to this location if the new
-directory does not already exist. This preserves the database, photos, settings and pairing
-state together. Existing new-location data is never merged with or overwritten by legacy data.
-Close older app instances before upgrading. If the directory cannot be moved, startup stops
+after upgrading, the app copies existing legacy data through a temporary directory into this
+location if the new directory does not already exist. The database, photos, settings and pairing
+state are preserved together, and the original directory remains as a backup. Existing
+new-location data is never merged with or overwritten by legacy data. Close older app instances
+before upgrading. If migration fails, startup stops
 with an error instead of opening an empty library.
 
 Readers prefer the local gallery as soon as at least one saved photo is available; the duplicate
