@@ -1,5 +1,7 @@
 # X Desktop Feed
 
+[English](README.md) | [Türkçe](README.tr.md)
+
 X Desktop Feed is a local PySide6 desktop application for saving public X posts, collecting
 recent original posts from selected public profiles, and capturing bounded snapshots of the
 signed-in user's X For You and Following timelines. Saved data, session history, topic models,
