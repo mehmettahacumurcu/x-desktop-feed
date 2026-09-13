@@ -54,6 +54,10 @@ class ApplicationAlreadyRunning(RuntimeError):
     pass
 
 
+class DataDirectoryMigrationError(RuntimeError):
+    pass
+
+
 def acquire_single_instance() -> SingleInstanceGuard | None:
     return SingleInstanceGuard.acquire()
 
@@ -80,11 +84,29 @@ class ApplicationServices:
 
 
 def default_database_path() -> Path:
-    return user_data_path("XDesktopFeed", "Internship") / "feed.sqlite3"
+    return user_data_path("XDesktopFeed", appauthor=False) / "feed.sqlite3"
 
 
 def default_session_data_path() -> Path:
-    return user_data_path("XDesktopFeed", "Internship") / "web-profile"
+    return user_data_path("XDesktopFeed", appauthor=False) / "web-profile"
+
+
+def prepare_data_directory(data_dir: Path) -> None:
+    """Upgrade the default location before opening files, under the instance guard.
+
+    Move the entire directory on the same filesystem so SQLite sidecars, relative
+    media paths and pairing state stay together. Never merge two data libraries.
+    Explicit/custom database locations must not migrate the user's default data.
+    """
+    current = user_data_path("XDesktopFeed", appauthor=False)
+    if data_dir != current:
+        return
+    legacy = user_data_path("XDesktopFeed", "Internship")
+    if not current.exists() and legacy != current and legacy.exists():
+        current.parent.mkdir(parents=True, exist_ok=True)
+        legacy.rename(current)
+    else:
+        current.mkdir(parents=True, exist_ok=True)
 
 
 def default_extension_path() -> Path:
@@ -172,7 +194,16 @@ def create_application(argv: list[str]) -> tuple[QApplication, MainWindow]:
     active_session_id: int | None = None
     bridge: OperaBridge | None = None
     try:
-        services = build_services(default_database_path())
+        database_path = default_database_path()
+        try:
+            prepare_data_directory(database_path.parent)
+        except OSError as error:
+            raise DataDirectoryMigrationError(
+                "Could not prepare the application data directory. Close any older "
+                "X Desktop Feed instance and retry. Existing data was not merged or "
+                f"replaced. Details: {error}"
+            ) from error
+        services = build_services(database_path)
         active_session_id = services.sessions.begin(APP_VERSION).id
         settings = UiSettingsStore(default_ui_settings_path())
         set_language(settings.language())

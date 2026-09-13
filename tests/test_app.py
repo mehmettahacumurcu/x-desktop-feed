@@ -323,6 +323,43 @@ def test_default_paths_keep_bridge_and_ui_preferences_in_app_data(tmp_path, monk
     assert default_media_path() == tmp_path / "media"
 
 
+def test_startup_stops_before_database_open_when_data_migration_fails(tmp_path, monkeypatch, qapp):
+    patch_runtime(tmp_path, monkeypatch)
+    opened = []
+
+    def fail_migration(_path):
+        assert len(SingleInstanceGuardDouble.instances) == 1
+        raise PermissionError("old directory is locked")
+
+    monkeypatch.setattr("xfeed.app.prepare_data_directory", fail_migration, raising=False)
+    monkeypatch.setattr("xfeed.app.build_services", lambda path: opened.append(path))
+    with pytest.raises(RuntimeError, match="old directory is locked"):
+        create_application([])
+    assert opened == []
+    assert SingleInstanceGuardDouble.instances[0].release_count == 1
+
+
+def test_main_displays_data_migration_error(monkeypatch, qapp):
+    import xfeed.__main__ as entrypoint
+    import xfeed.app as app_module
+
+    failure = getattr(app_module, "DataDirectoryMigrationError", RuntimeError)
+    messages = []
+
+    def refuse(_argv):
+        raise failure("Please close the old application")
+
+    class MessageBoxDouble:
+        @staticmethod
+        def critical(_parent, title, message):
+            messages.append((title, message))
+
+    monkeypatch.setattr(entrypoint, "create_application", refuse)
+    monkeypatch.setattr(entrypoint, "QMessageBox", MessageBoxDouble)
+    assert entrypoint.main() == 1
+    assert messages == [("X Desktop Feed", "Please close the old application")]
+
+
 def test_create_application_composes_one_shared_experience(tmp_path, monkeypatch, qtbot) -> None:
     patch_runtime(tmp_path, monkeypatch)
 

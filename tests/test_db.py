@@ -486,5 +486,5 @@ def test_build_database_migrates_the_requested_path(tmp_path):
 
 def test_default_database_path_uses_the_application_data_directory():
     assert default_database_path() == (
-        user_data_path("XDesktopFeed", "Internship") / "feed.sqlite3"
+        user_data_path("XDesktopFeed", appauthor=False) / "feed.sqlite3"
     )
