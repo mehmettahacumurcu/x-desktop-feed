@@ -102,9 +102,8 @@ implemented as complete user workflows in this release.
 X Desktop Feed automatically saves every static photo attached to a post that newly enters the
 local library through **My Feed**, **Sources**, or **Manual Saves**. It keeps X display order and
 stores display-sized copies: every photo is retained, with its longest edge capped at 1600 pixels.
-Photos are stored by default at
-`%LOCALAPPDATA%\Internship\XDesktopFeed\media\<post-id>\photo-<position>.<ext>` (for example,
-under `C:\Users\your-name\AppData\Local\Internship\XDesktopFeed\media`).
+Photos are stored in the application's local data directory, under
+`media/<post-id>/photo-<position>.<ext>`.
 
 Readers prefer the local gallery as soon as at least one saved photo is available; the duplicate
 online embed media is then omitted. Until that happens, the normal online embed remains the
